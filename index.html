@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProPersona - Welcome</title>
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: flex-end;
+      z-index: 100;
+    }
+
+
+nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center; /* Changed from flex-end to center */
+  z-index: 100;
+}
+
+
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-item {
+      position: relative;
+      margin-left: 1.5rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+    }
+
+    .nav-item:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .about-content {
+      padding: 1rem;
+      color: #333;
+      text-align: left;
+    }
+
+    .contact-info {
+      padding: 1rem;
+      color: #333;
+    }
+
+    .contact-info a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.8rem;
+      color: #2575fc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .contact-info a:hover {
+      color: #6a11cb;
+      text-decoration: none;
+    }
+
+    .contact-info i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 5% auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .logo-holder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #fff;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-holder img {
+      width: 100%;
+      height: auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro-message {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: #f0f0f0;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .feature {
+      flex: 1 1 150px;
+      margin: 1rem;
+      background: rgba(255,255,255,0.15);
+      padding: 1rem;
+      border-radius: 10px;
+      transition: transform 0.3s;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature img {
+      width: 50px;
+      margin-bottom: 0.5rem;
+      align-self: center;
+    }
+
+    .feature p {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .btn {
+      background: #00c6ff;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #0072ff;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .feature {
+        min-height: auto;
+      }
+    }
+  </style>
+  <script>
+    function goToAssessment() {
+      document.body.style.opacity = 0;
+      setTimeout(() => {
+        window.location.href = 'assessment.html';
+      }, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.opacity = 1;
+    });
+  </script>
+</head>
+<body style="opacity: 0; transition: opacity 0.5s ease-in-out;">
+  <nav>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="#" class="nav-link">About Us</a>
+        <ul class="dropdown-menu">
+          <li class="about-content">
+            <p>Hi, I'm Therence Mashego, a Junior Cloud Engineer and DevOps enthusiast. This project is part of my upskilling journey to demonstrate my full-stack development capabilities. ProPersona showcases my skills in web development, user experience design, and personality assessment algorithms while I continue to grow in cloud technologies.</p>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">Contact</a>
+        <ul class="dropdown-menu">
+          <li class="contact-info">
+            <a href="tel:0612137899"><i class="fas fa-phone"></i> 061 213 7899</a>
+            <a href="mailto:poiterrence39@gmail.com"><i class="fas fa-envelope"></i> poiterrence39@gmail.com</a>
+            <a href="https://www.linkedin.com/in/therence-mashego-b8265b20b" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <a href="https://github.com/TherenceMashego" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://therencemashego.github.io/Portfolio-Therence-Mashego-cloud-devops/" target="_blank"><i class="fas fa-briefcase"></i> Portfolio</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="logo-holder">
+      <img src="https://img.icons8.com/fluency/96/brain.png" alt="Logo"/>
+    </div>
+    <h1>Welcome to ProPersona</h1>
+    <p class="intro-message">
+      Are you wondering what your personality is like in the workplace? Then you've come to the right place! ProPersona helps you discover your soft skills, behavior traits, and communication style through a professional self-assessment.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <img src="https://img.icons8.com/color/96/brain.png" alt="Personality" />
+        <h3>Personality</h3>
+        <p>Discover your workplace personality traits including problem-solving approach, adaptability, and leadership tendencies that shape your professional interactions.</p>
+      </div>
+      <div class="feature">
+        <img src="https://img.icons8.com/color/96/conference-call.png" alt="Behavior" />
+        <h3>Behavior</h3>
+        <p>Understand your behavioral patterns in team settings, conflict resolution, and how you respond to workplace challenges and deadlines.</p>
+      </div>
+      <div class="feature">
+        <img src="https://img.icons8.com/color/96/speech-bubble.png" alt="Communication" />
+        <h3>Communication</h3>
+        <p>Learn about your preferred communication style, feedback approach, and meeting participation to enhance team collaboration.</p>
+      </div>
+    </div>
+
+    <button class="btn" onclick="goToAssessment()">Take the Assessment</button>
+
+    <footer>
+      <p>ProPersona™ | Therence Mashego</p>
+    </footer>
+  </div>
+</body>
+</html>

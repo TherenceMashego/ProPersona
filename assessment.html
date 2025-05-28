@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProPersona Assessment</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+      padding: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Navigation */
+    nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: flex-end;
+      z-index: 100;
+    }
+
+
+    nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center; /* Changed from flex-end to center */
+  z-index: 100;
+}
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-item {
+      position: relative;
+      margin-left: 1.5rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+    }
+
+    .nav-item:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .about-content {
+      padding: 1rem;
+      color: #333;
+      text-align: left;
+    }
+
+    .contact-info {
+      padding: 1rem;
+      color: #333;
+    }
+
+    .contact-info a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.8rem;
+      color: #2575fc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .contact-info a:hover {
+      color: #6a11cb;
+      text-decoration: none;
+    }
+
+    .contact-info i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .section {
+      max-width: 800px;
+      margin: 80px auto 2rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      color: #fff;
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1rem;
+    }
+
+    .question p {
+      margin-bottom: 0.5rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #resultSection {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chart-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    canvas {
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    .celebrate {
+      font-size: 1.5rem;
+      color: gold;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      background: #00c6ff;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #0072ff;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .recommendations {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .recommendations h3 {
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 10px;
+    }
+
+    .recommendations ul {
+      padding-left: 20px;
+    }
+
+    .recommendations li {
+      margin-bottom: 8px;
+    }
+
+    .personality-analysis {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error {
+      border: 1px solid #ff6b6b !important;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+      }
+      nav {
+        display: none !important;
+      }
+      .section {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        max-width: 100% !important;
+      }
+      h2, h3 {
+        color: black !important;
+      }
+      .btn, .btn-secondary {
+        display: none !important;
+      }
+      .chart-container {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="index.html" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">About Us</a>
+        <ul class="dropdown-menu">
+          <li class="about-content">
+            <p>Hi, I'm Therence Mashego, a Junior Cloud Engineer and DevOps enthusiast. This project is part of my upskilling journey to demonstrate my full-stack development capabilities. ProPersona showcases my skills in web development, user experience design, and personality assessment algorithms while I continue to grow in cloud technologies.</p>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">Contact</a>
+        <ul class="dropdown-menu">
+          <li class="contact-info">
+            <a href="tel:0612137899"><i class="fas fa-phone"></i> 061 213 7899</a>
+            <a href="mailto:poiterrence39@gmail.com"><i class="fas fa-envelope"></i> poiterrence39@gmail.com</a>
+            <a href="https://www.linkedin.com/in/therence-mashego-b8265b20b" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <a href="https://github.com/TherenceMashego" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://therencemashego.github.io/Portfolio-Therence-Mashego-cloud-devops/" target="_blank"><i class="fas fa-briefcase"></i> Portfolio</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="section" id="userInfoSection">
+    <h2>Yay! You're about to begin 🎉</h2>
+    <p>But first, we need your details to personalize your results.</p>
+    <input type="text" id="userName" placeholder="Your Full Name" required />
+    <input type="email" id="userEmail" placeholder="Your Email Address" required />
+    <button class="btn" onclick="startAssessment()">Begin Assessment</button>
+  </div>
+
+  <div class="section hidden" id="quizSection">
+    <h2>Assessment Questions</h2>
+
+    <div class="question-group">
+      <h3>1. Personality & Soft Skills</h3>
+      <div class="question">
+        <p>I enjoy solving complex problems at work.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I feel comfortable speaking in front of a group.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I manage my time effectively and meet deadlines.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I can adapt quickly when priorities change.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I naturally take the lead in group situations.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I enjoy mediating conflicts between colleagues.</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <h3>2. Behavior-Based</h3>
+      <div class="question">
+        <p>You're given a task with minimal instructions. What do you do?</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Take initiative to research and proceed.</option>
+          <option>Ask for clarification before starting.</option>
+          <option>Wait until someone gives more details.</option>
+          <option>Avoid starting until fully explained.</option>
+          <option>Complain about unclear instructions.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>When conflict arises in a team, you...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Act as a mediator to resolve issues.</option>
+          <option>Express your views calmly.</option>
+          <option>Stay silent to avoid conflict.</option>
+          <option>Get defensive and emotional.</option>
+          <option>Blame others for mistakes.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>You are behind on a deadline. What do you do?</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Inform the team and work overtime to catch up.</option>
+          <option>Do your best but don't say anything.</option>
+          <option>Ask for help immediately.</option>
+          <option>Ignore it until someone asks.</option>
+          <option>Make excuses.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>You notice a colleague struggling. Do you...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Offer support without being asked.</option>
+          <option>Wait until they ask for help.</option>
+          <option>Avoid involvement.</option>
+          <option>Talk to a manager about it.</option>
+          <option>Ignore them completely.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>When starting a new project, you typically...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Take charge and assign roles</option>
+          <option>Collaborate with others to plan</option>
+          <option>Wait for instructions</option>
+          <option>Focus on your individual tasks</option>
+          <option>Avoid responsibility</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <h3>3. Communication Style</h3>
+      <div class="question">
+        <p>When sharing ideas, I prefer...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Clear and direct communication.</option>
+          <option>Casual and friendly discussion.</option>
+          <option>Email and text-based communication.</option>
+          <option>Minimal explanation.</option>
+          <option>Avoid sharing ideas publicly.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I give feedback in a way that is...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Constructive and respectful.</option>
+          <option>Honest but sometimes blunt.</option>
+          <option>Only when necessary.</option>
+          <option>Reluctant and reserved.</option>
+          <option>I avoid giving feedback.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>In meetings, I tend to...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Lead discussions and present ideas.</option>
+          <option>Contribute when I feel confident.</option>
+          <option>Listen more than I speak.</option>
+          <option>Zone out or multitask.</option>
+          <option>Skip them when possible.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>I prefer receiving instructions that are...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Detailed and structured.</option>
+          <option>Brief and to the point.</option>
+          <option>Visual (charts, diagrams).</option>
+          <option>In-person explanations.</option>
+          <option>Minimal guidance.</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+      <div class="question">
+        <p>When team members disagree, I...</p>
+        <select class="question-select" required>
+          <option value="" selected disabled>No Selection</option>
+          <option>Facilitate compromise</option>
+          <option>Take a side based on facts</option>
+          <option>Stay neutral</option>
+          <option>Avoid the conflict</option>
+          <option>Escalate to management</option>
+        </select>
+        <div class="error-message">Please select an option</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="validateForm()">Submit Assessment</button>
+  </div>
+
+  <div class="section hidden" id="resultSection">
+    <h2>🎉 Congratulations <span id="resultName"></span>! 🎉</h2>
+    <p class="celebrate">You have completed the assessment. Here are your results:</p>
+    
+    <div class="personality-analysis">
+      <h3>Your Personality Analysis</h3>
+      <p id="personalityAnalysis"></p>
+      <p id="departmentFit"></p>
+    </div>
+    
+    <p id="resultSummary"></p>
+    
+    <div class="chart-container">
+      <canvas id="resultChart"></canvas>
+      <canvas id="radarChart"></canvas>
+    </div>
+    
+    <div class="recommendations">
+      <h3>Recommendations for Growth</h3>
+      <ul id="recommendationsList">
+      </ul>
+    </div>
+    
+    <button class="btn" onclick="printResults()">Print Results</button>
+    <button class="btn-secondary" onclick="goBackToHome()">Go Back to Home</button>
+  </div>
+
+  <script>
+    function startAssessment() {
+      const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+
+      if (!name || !email) {
+        alert('Please enter your name and email.');
+        return;
+      }
+
+      document.getElementById('userInfoSection').classList.add('hidden');
+      document.getElementById('quizSection').classList.remove('hidden');
+    }
+
+    function validateForm() {
+      let isValid = true;
+      const selects = document.querySelectorAll('.question-select');
+      
+      selects.forEach(select => {
+        const errorMessage = select.nextElementSibling;
+        if (select.value === "" || select.value === null) {
+          select.classList.add('error');
+          errorMessage.style.display = 'block';
+          isValid = false;
+        } else {
+          select.classList.remove('error');
+          errorMessage.style.display = 'none';
+        }
+      });
+
+      if (isValid) {
+        showResults();
+      } else {
+        // Scroll to the first error
+        const firstError = document.querySelector('.error');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+
+    function showResults() {
+      const name = document.getElementById('userName').value;
+      document.getElementById('resultName').textContent = name;
+
+      const selects = document.querySelectorAll('#quizSection select');
+      let scores = [0, 0, 0, 0]; // Personality, Behavior, Communication, Leadership
+      selects.forEach((sel, i) => {
+        let val = sel.selectedIndex; // Now starts from 0 for "No Selection"
+        if (val > 0) { // Skip if "No Selection" (though validation should prevent this)
+          if (i < 6) scores[0] += val; // Personality
+          else if (i < 11) scores[1] += val; // Behavior
+          else scores[2] += val; // Communication
+          
+          // Additional scoring for leadership/mediation
+          if (i === 4 || i === 5 || i === 9) scores[3] += val; // Leadership questions
+        }
+      });
+
+      // Calculate average scores for radar chart (1-5 scale)
+      const personalityAvg = (scores[0] / 6).toFixed(1);
+      const behaviorAvg = (scores[1] / 5).toFixed(1);
+      const communicationAvg = (scores[2] / 5).toFixed(1);
+      const leadershipAvg = (scores[3] / 3).toFixed(1);
+      
+      let summary = '';
+      if (scores[0] >= 24) summary += 'You are highly self-motivated and flexible. ';
+      else if (scores[0] >= 18) summary += 'You have good personality traits but room for growth. ';
+      else summary += 'You may benefit from improving time management and adaptability. ';
+
+      if (scores[1] >= 20) summary += 'You exhibit excellent workplace behavior. ';
+      else if (scores[1] >= 15) summary += 'Your workplace behavior is generally positive. ';
+      else summary += 'Work on proactive and collaborative skills. ';
+
+      if (scores[2] >= 20) summary += 'You communicate with clarity and respect.';
+      else if (scores[2] >= 15) summary += 'Your communication style is effective but could be refined.';
+      else summary += 'Improving your communication style could benefit team dynamics.';
+
+      document.getElementById('resultSummary').textContent = summary;
+      
+      // Personality analysis
+      let personalityType = '';
+      let analysis = '';
+      let department = '';
+      let leadershipScore = scores[3];
+      
+      if (leadershipScore >= 12) {
+        personalityType = 'Initiator/Leader';
+        analysis = 'You are a natural leader who takes charge of situations. You thrive in environments where you can direct projects and make decisions. Your confidence and initiative make you stand out in group settings.';
+        department = 'You would excel in management, entrepreneurship, or any leadership role. Project management, team leadership, or executive positions would suit your personality well.';
+      } else if (leadershipScore >= 8) {
+        personalityType = 'Collaborator/Mediator';
+        analysis = 'You are a team player who values harmony and cooperation. You excel at bringing people together and finding common ground. Your ability to mediate conflicts makes you invaluable in team settings.';
+        department = 'You would thrive in human resources, customer service, or any collaborative role. Team-based environments where cooperation is valued would be ideal for you.';
+      } else {
+        personalityType = 'Supportive Contributor';
+        analysis = 'You prefer to work behind the scenes and support the team in your own way. You may not seek the spotlight but your steady contributions are essential to success. You work best with clear expectations and structured environments.';
+        department = 'You would do well in administrative roles, technical positions, or any role that values consistency and reliability. Back-office operations or specialized technical roles might suit you best.';
+      }
+      
+      document.getElementById('personalityAnalysis').innerHTML = `
+        <strong>Your Personality Type:</strong> ${personalityType}<br><br>
+        <strong>Analysis:</strong> ${analysis}
+      `;
+      
+      document.getElementById('departmentFit').innerHTML = `
+        <strong>Where You Excel:</strong> ${department}
+      `;
+      
+      // Recommendations
+      let recommendations = [];
+      
+      if (scores[0] < 18) {
+        recommendations.push('Practice time management techniques like the Pomodoro method');
+        recommendations.push('Challenge yourself with new tasks to improve adaptability');
+      }
+      
+      if (scores[1] < 15) {
+        recommendations.push('Work on taking initiative in team projects');
+        recommendations.push('Practice active listening in workplace interactions');
+      }
+      
+      if (scores[2] < 15) {
+        recommendations.push('Attend communication skills workshops');
+        recommendations.push('Practice giving constructive feedback to colleagues');
+      }
+      
+      if (leadershipScore < 8 && leadershipScore >= 4) {
+        recommendations.push('Consider taking on small leadership opportunities to build confidence');
+      } else if (leadershipScore < 4) {
+        recommendations.push('Work on assertiveness training to better express your ideas');
+      }
+      
+      const recommendationsList = document.getElementById('recommendationsList');
+      recommendationsList.innerHTML = ''; // Clear previous recommendations
+      recommendations.forEach(rec => {
+        const li = document.createElement('li');
+        li.textContent = rec;
+        recommendationsList.appendChild(li);
+      });
+
+      // Save results to local storage
+      const resultData = {
+        name: name,
+        date: new Date().toISOString(),
+        scores: scores,
+        personalityType: personalityType,
+        analysis: analysis,
+        department: department,
+        summary: summary,
+        recommendations: recommendations
+      };
+      localStorage.setItem('assessmentResults', JSON.stringify(resultData));
+
+      document.getElementById('quizSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.remove('hidden');
+
+      // Personality Pie Chart
+      new Chart(document.getElementById('resultChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Leader', 'Collaborator', 'Listener', 'Initiator', 'Mediator'],
+          datasets: [{
+            data: [
+              scores[0] * 0.3, 
+              scores[1] * 0.3, 
+              scores[2] * 0.3,
+              leadershipScore * 2,
+              (scores[1] + scores[2]) * 0.2
+            ],
+            backgroundColor: ['#00c6ff', '#4CAF50', '#FFC107', '#FF6384', '#36A2EB']
+          }]
+        }
+      });
+
+      // Radar Chart for Skills Assessment
+      new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+          labels: ['Personality', 'Behavior', 'Communication', 'Leadership'],
+          datasets: [{
+            label: 'Your Scores',
+            data: [personalityAvg, behaviorAvg, communicationAvg, leadershipAvg],
+            backgroundColor: 'rgba(0, 198, 255, 0.2)',
+            borderColor: 'rgba(0, 198, 255, 1)',
+            pointBackgroundColor: 'rgba(0, 198, 255, 1)',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              angleLines: {
+                display: true
+              },
+              suggestedMin: 1,
+              suggestedMax: 5,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function printResults() {
+      // Save results to local storage again before printing
+      const name = document.getElementById('resultName').textContent;
+      const resultData = {
+        name: name,
+        date: new Date().toISOString(),
+        personalityAnalysis: document.getElementById('personalityAnalysis').innerHTML,
+        departmentFit: document.getElementById('departmentFit').innerHTML,
+        resultSummary: document.getElementById('resultSummary').textContent,
+        recommendations: Array.from(document.querySelectorAll('#recommendationsList li')).map(li => li.textContent)
+      };
+      localStorage.setItem('lastAssessmentPrint', JSON.stringify(resultData));
+      
+      // Trigger print dialog
+      window.print();
+    }
+
+    function goBackToHome() {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
