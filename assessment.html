@@ -7,6 +7,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- AWS SDK -->
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.795.0.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
 
@@ -27,21 +29,9 @@
       right: 0;
       padding: 1rem 2rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       z-index: 100;
     }
-
-
-    nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: center; /* Changed from flex-end to center */
-  z-index: 100;
-}
 
     .nav-menu {
       list-style: none;
@@ -262,6 +252,42 @@
       border: 1px solid #ff6b6b !important;
     }
 
+    #dbStatus {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .db-success {
+      background-color: rgba(46, 125, 50, 0.3);
+      border: 1px solid #2e7d32;
+    }
+
+    .db-error {
+      background-color: rgba(211, 47, 47, 0.3);
+      border: 1px solid #d32f2f;
+    }
+
+    .email-error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-top: -5px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .assessment-error {
+      color: #ff6b6b;
+      font-size: 1rem;
+      text-align: center;
+      padding: 15px;
+      background-color: rgba(211, 47, 47, 0.2);
+      border-radius: 8px;
+      margin: 20px 0;
+      display: none;
+    }
+
     @media print {
       body {
         background: white !important;
@@ -326,7 +352,9 @@
     <p>But first, we need your details to personalize your results.</p>
     <input type="text" id="userName" placeholder="Your Full Name" required />
     <input type="email" id="userEmail" placeholder="Your Email Address" required />
-    <button class="btn" onclick="startAssessment()">Begin Assessment</button>
+    <div class="email-error" id="emailError">Please enter a valid email address</div>
+    <div class="assessment-error" id="assessmentError">You've already taken this assessment. Only one submission per email is allowed.</div>
+    <button class="btn" onclick="validateUserInfo()">Begin Assessment</button>
   </div>
 
   <div class="section hidden" id="quizSection">
@@ -346,8 +374,9 @@
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I feel comfortable speaking in front of a group.</p>
+        <p>I adapt easily to changes in my work environment.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
           <option>Strongly Agree</option>
@@ -358,8 +387,9 @@
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I manage my time effectively and meet deadlines.</p>
+        <p>I manage my time effectively to meet deadlines.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
           <option>Strongly Agree</option>
@@ -370,8 +400,9 @@
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I can adapt quickly when priorities change.</p>
+        <p>I remain calm under pressure.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
           <option>Strongly Agree</option>
@@ -382,8 +413,9 @@
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I naturally take the lead in group situations.</p>
+        <p>I take initiative in my work without being asked.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
           <option>Strongly Agree</option>
@@ -394,8 +426,9 @@
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I enjoy mediating conflicts between colleagues.</p>
+        <p>I am comfortable working independently.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
           <option>Strongly Agree</option>
@@ -409,64 +442,68 @@
     </div>
 
     <div class="question-group">
-      <h3>2. Behavior-Based</h3>
+      <h3>2. Workplace Behavior</h3>
       <div class="question">
-        <p>You're given a task with minimal instructions. What do you do?</p>
+        <p>I actively participate in team discussions.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Take initiative to research and proceed.</option>
-          <option>Ask for clarification before starting.</option>
-          <option>Wait until someone gives more details.</option>
-          <option>Avoid starting until fully explained.</option>
-          <option>Complain about unclear instructions.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>When conflict arises in a team, you...</p>
+        <p>I respect and value diverse opinions in the workplace.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Act as a mediator to resolve issues.</option>
-          <option>Express your views calmly.</option>
-          <option>Stay silent to avoid conflict.</option>
-          <option>Get defensive and emotional.</option>
-          <option>Blame others for mistakes.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>You are behind on a deadline. What do you do?</p>
+        <p>I maintain a positive attitude even during challenging situations.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Inform the team and work overtime to catch up.</option>
-          <option>Do your best but don't say anything.</option>
-          <option>Ask for help immediately.</option>
-          <option>Ignore it until someone asks.</option>
-          <option>Make excuses.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>You notice a colleague struggling. Do you...</p>
+        <p>I provide constructive feedback to my colleagues.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Offer support without being asked.</option>
-          <option>Wait until they ask for help.</option>
-          <option>Avoid involvement.</option>
-          <option>Talk to a manager about it.</option>
-          <option>Ignore them completely.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>When starting a new project, you typically...</p>
+        <p>I take responsibility for my mistakes and learn from them.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Take charge and assign roles</option>
-          <option>Collaborate with others to plan</option>
-          <option>Wait for instructions</option>
-          <option>Focus on your individual tasks</option>
-          <option>Avoid responsibility</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
@@ -475,62 +512,66 @@
     <div class="question-group">
       <h3>3. Communication Style</h3>
       <div class="question">
-        <p>When sharing ideas, I prefer...</p>
+        <p>I express my ideas clearly and concisely.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Clear and direct communication.</option>
-          <option>Casual and friendly discussion.</option>
-          <option>Email and text-based communication.</option>
-          <option>Minimal explanation.</option>
-          <option>Avoid sharing ideas publicly.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I give feedback in a way that is...</p>
+        <p>I actively listen to others before responding.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Constructive and respectful.</option>
-          <option>Honest but sometimes blunt.</option>
-          <option>Only when necessary.</option>
-          <option>Reluctant and reserved.</option>
-          <option>I avoid giving feedback.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>In meetings, I tend to...</p>
+        <p>I adapt my communication style to different audiences.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Lead discussions and present ideas.</option>
-          <option>Contribute when I feel confident.</option>
-          <option>Listen more than I speak.</option>
-          <option>Zone out or multitask.</option>
-          <option>Skip them when possible.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>I prefer receiving instructions that are...</p>
+        <p>I provide clear instructions when delegating tasks.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Detailed and structured.</option>
-          <option>Brief and to the point.</option>
-          <option>Visual (charts, diagrams).</option>
-          <option>In-person explanations.</option>
-          <option>Minimal guidance.</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
+      
       <div class="question">
-        <p>When team members disagree, I...</p>
+        <p>I handle difficult conversations professionally.</p>
         <select class="question-select" required>
           <option value="" selected disabled>No Selection</option>
-          <option>Facilitate compromise</option>
-          <option>Take a side based on facts</option>
-          <option>Stay neutral</option>
-          <option>Avoid the conflict</option>
-          <option>Escalate to management</option>
+          <option>Strongly Agree</option>
+          <option>Agree</option>
+          <option>Neutral</option>
+          <option>Disagree</option>
+          <option>Strongly Disagree</option>
         </select>
         <div class="error-message">Please select an option</div>
       </div>
@@ -542,6 +583,8 @@
   <div class="section hidden" id="resultSection">
     <h2>🎉 Congratulations <span id="resultName"></span>! 🎉</h2>
     <p class="celebrate">You have completed the assessment. Here are your results:</p>
+    
+    <div id="dbStatus"></div>
     
     <div class="personality-analysis">
       <h3>Your Personality Analysis</h3>
@@ -567,15 +610,79 @@
   </div>
 
   <script>
-    function startAssessment() {
+    // AWS Configuration - REPLACE WITH YOUR ACTUAL VALUES
+    AWS.config.update({
+      region: 'us-east-1', // Your AWS region
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'us-east-1:9eb8b51b-4afe-4598-a006-5639fa6a8d96' // Your Cognito Identity Pool ID
+      })
+    });
+
+    const dynamodb = new AWS.DynamoDB.DocumentClient();
+    const TABLE_NAME = 'ProPersonaResponses';
+    const ASSESSMENT_KEY = 'proPersonaAssessmentTaken';
+
+    // Function to validate email format
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    // Function to check if user has already taken the assessment
+function hasTakenAssessment(email) {
+  // Check localStorage first
+  if (localStorage.getItem(ASSESSMENT_KEY)) {
+    const takenEmails = JSON.parse(localStorage.getItem(ASSESSMENT_KEY));
+    return takenEmails.includes(email.toLowerCase());
+  }
+  return false;
+}
+
+    // Function to record that user has taken the assessment
+    function recordAssessmentTaken(email) {
+      let takenEmails = [];
+      if (localStorage.getItem(ASSESSMENT_KEY)) {
+        takenEmails = JSON.parse(localStorage.getItem(ASSESSMENT_KEY));
+      }
+      takenEmails.push(email.toLowerCase());
+      localStorage.setItem(ASSESSMENT_KEY, JSON.stringify(takenEmails));
+    }
+
+    // Validate user info before starting assessment
+    function validateUserInfo() {
       const name = document.getElementById('userName').value;
       const email = document.getElementById('userEmail').value;
+      const emailError = document.getElementById('emailError');
+      const assessmentError = document.getElementById('assessmentError');
 
-      if (!name || !email) {
-        alert('Please enter your name and email.');
+      // Reset error messages
+      emailError.style.display = 'none';
+      assessmentError.style.display = 'none';
+
+      // Validate name
+      if (!name) {
+        alert('Please enter your name.');
         return;
       }
 
+      // Validate email
+      if (!email) {
+        alert('Please enter your email address.');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        emailError.style.display = 'block';
+        return;
+      }
+
+      // Check if assessment was already taken
+      if (hasTakenAssessment(email)) {
+        assessmentError.style.display = 'block';
+        return;
+      }
+
+      // If all validations pass, start assessment
       document.getElementById('userInfoSection').classList.add('hidden');
       document.getElementById('quizSection').classList.remove('hidden');
     }
@@ -599,7 +706,6 @@
       if (isValid) {
         showResults();
       } else {
-        // Scroll to the first error
         const firstError = document.querySelector('.error');
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -607,25 +713,78 @@
       }
     }
 
-    function showResults() {
+    function collectAllResponses() {
+      const questions = document.querySelectorAll('.question');
+      const responses = [];
+      
+      questions.forEach((question, index) => {
+        const questionText = question.querySelector('p').textContent.trim();
+        const answer = question.querySelector('select').value;
+        responses.push({
+          questionNumber: index + 1,
+          question: questionText,
+          answer: answer
+        });
+      });
+      
+      return responses;
+    }
+
+    async function saveToDynamoDB(results) {
+      const dbStatus = document.getElementById('dbStatus');
+      dbStatus.style.display = 'block';
+      
+      const params = {
+        TableName: TABLE_NAME,
+        Item: {
+          responseId: `${results.name}-${Date.now()}`,
+          userName: results.name,
+          userEmail: document.getElementById('userEmail').value,
+          timestamp: new Date().toISOString(),
+          responses: collectAllResponses(),
+          personalityType: results.personalityType,
+          analysis: results.analysis,
+          department: results.department,
+          recommendations: results.recommendations,
+          scores: results.scores
+        }
+      };
+
+      try {
+        await dynamodb.put(params).promise();
+        dbStatus.className = 'db-success';
+        dbStatus.innerHTML = '<i class="fas fa-check-circle"></i> Your results have been saved successfully!';
+        return true;
+      } catch (error) {
+        console.error('Error saving to DynamoDB:', error);
+        dbStatus.className = 'db-error';
+        dbStatus.innerHTML = `<i class="fas fa-exclamation-triangle"></i> We couldn't save your results automatically. Error: ${error.message}`;
+        return false;
+      }
+    }
+
+    async function showResults() {
       const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
       document.getElementById('resultName').textContent = name;
 
+      // Record that this user has taken the assessment
+      recordAssessmentTaken(email);
+
       const selects = document.querySelectorAll('#quizSection select');
-      let scores = [0, 0, 0, 0]; // Personality, Behavior, Communication, Leadership
+      let scores = [0, 0, 0, 0];
       selects.forEach((sel, i) => {
-        let val = sel.selectedIndex; // Now starts from 0 for "No Selection"
-        if (val > 0) { // Skip if "No Selection" (though validation should prevent this)
-          if (i < 6) scores[0] += val; // Personality
-          else if (i < 11) scores[1] += val; // Behavior
-          else scores[2] += val; // Communication
+        let val = sel.selectedIndex;
+        if (val > 0) {
+          if (i < 6) scores[0] += val;
+          else if (i < 11) scores[1] += val;
+          else scores[2] += val;
           
-          // Additional scoring for leadership/mediation
-          if (i === 4 || i === 5 || i === 9) scores[3] += val; // Leadership questions
+          if (i === 4 || i === 5 || i === 9) scores[3] += val;
         }
       });
 
-      // Calculate average scores for radar chart (1-5 scale)
+      // Calculate averages
       const personalityAvg = (scores[0] / 6).toFixed(1);
       const behaviorAvg = (scores[1] / 5).toFixed(1);
       const communicationAvg = (scores[2] / 5).toFixed(1);
@@ -700,14 +859,14 @@
       }
       
       const recommendationsList = document.getElementById('recommendationsList');
-      recommendationsList.innerHTML = ''; // Clear previous recommendations
+      recommendationsList.innerHTML = '';
       recommendations.forEach(rec => {
         const li = document.createElement('li');
         li.textContent = rec;
         recommendationsList.appendChild(li);
       });
 
-      // Save results to local storage
+      // Prepare result data
       const resultData = {
         name: name,
         date: new Date().toISOString(),
@@ -718,12 +877,16 @@
         summary: summary,
         recommendations: recommendations
       };
-      localStorage.setItem('assessmentResults', JSON.stringify(resultData));
 
+      // Save to both localStorage and DynamoDB
+      localStorage.setItem('assessmentResults', JSON.stringify(resultData));
+      await saveToDynamoDB(resultData);
+
+      // Show results
       document.getElementById('quizSection').classList.add('hidden');
       document.getElementById('resultSection').classList.remove('hidden');
 
-      // Personality Pie Chart
+      // Charts
       new Chart(document.getElementById('resultChart'), {
         type: 'pie',
         data: {
@@ -741,7 +904,6 @@
         }
       });
 
-      // Radar Chart for Skills Assessment
       new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
@@ -773,19 +935,6 @@
     }
 
     function printResults() {
-      // Save results to local storage again before printing
-      const name = document.getElementById('resultName').textContent;
-      const resultData = {
-        name: name,
-        date: new Date().toISOString(),
-        personalityAnalysis: document.getElementById('personalityAnalysis').innerHTML,
-        departmentFit: document.getElementById('departmentFit').innerHTML,
-        resultSummary: document.getElementById('resultSummary').textContent,
-        recommendations: Array.from(document.querySelectorAll('#recommendationsList li')).map(li => li.textContent)
-      };
-      localStorage.setItem('lastAssessmentPrint', JSON.stringify(resultData));
-      
-      // Trigger print dialog
       window.print();
     }
 
